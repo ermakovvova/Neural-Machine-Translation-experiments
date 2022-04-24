@@ -12,7 +12,7 @@ from subword_nmt.apply_bpe import BPE
 import sentencepiece as spm
 
 
-URL = 'https://raw.githubusercontent.com/neychev/made_nlp_course/spring2021/datasets/Machine_translation_EN_RU/data.txt'
+URL = 'https://raw.githubusercontent.com/ermakovvova/nmt_experiments/dataset/data.txt'
 DATASETS_PATH = 'dataset'
 DATASET_FILENAME = 'data'
 FILE_FORMAT = '.txt'
