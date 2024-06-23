@@ -4,19 +4,15 @@ This repo presents series of experiments aimed to compare several Seq2Seq neural
 
 ### Criteria for comparison:
 - BLUE score
-- GPU training time
+- GPU training time per epoch
 
 ### Data:
+English-Russian pairs of hotel descriptions.
 
 ### Experiments include
- - Compare LSTM and Transformer architectures for machine translation task
- - Investigate influence of pretraining of encoder and decoder models on language modeling task
- - Compare word tokenization with BPE.
-
-
-Training output contains examples of generated texts, values of loss and blue score.
-All visualizations are done in tensorboard.
-Please, look at [nmt_experiments.ipynb](https://github.com/ermakovvova/nmt_experiments/blob/master/nmt_experiments.ipynb)
+ - Comparison of LSTM and Transformer architectures for machine translation task
+ - Analysos of influence of pretraining encoder and/or decoder models on language modeling task
+ - Comparison of WordPunctTokenizer from nltk lib with BPE.
 
 
 ## Project Structure
@@ -27,8 +23,7 @@ Please, look at [nmt_experiments.ipynb](https://github.com/ermakovvova/nmt_exper
 ├── data.py
 ├── dataset
 │   ├── data.txt
-├── notebooks
-│   └── Inference.ipynb
+├── nmt_experiments.ipynb
 ├── models
 │   ├── __init__.py
 │   ├── model.py
@@ -40,39 +35,66 @@ Please, look at [nmt_experiments.ipynb](https://github.com/ermakovvova/nmt_exper
 ├── README.md
 ├── run.py
 ├── requirements.txt
+├── tests
+│   ├── __init__.py
 ├── train.py
 └── utils.py
 ```
 
-- **utils/dataloader.py** - data loader for WikiText-2 and WikiText103 datasets
-- **utils/model.py** - model architectures
-- **utils/trainer.py** - class for model training and evaluation
-
-- **train.py** - script for training
-- **config.yaml** - file with training parameters
-- **weights/** - folder where expriments artifacts are stored
-- **notebooks/Inference.ipynb** - demo of how embeddings are used
 
 ## Usage
 
-Explain argparse under the hood
+Command line tool allows to run
+- train LSTM based Seq2Seq model:
+    ```
+    python run.py train --seq2seq-name Seq2Seq --epochs 25`
+    ```
+    or Transformer model:
+    ```
+    python run.py train --seq2seq-type transformer--epochs 30
+    ```
+    or with BPE:
+    ```
+    python run.py train --seq2seq-type transformer --bpe --epochs 30
+    ```
 
-```
-python run.py train --enc-type rnn --enc-name PretrainEncoder --epochs 20 pretrain --pretrain-encoder
-```
+- pretrain encoder or decore:
+    ```
+    python run.py train --enc-type rnn --enc-name PretrainEncoder --epochs 20 pretrain --pretrain-encoder
+    ```
+- train from pretrained model:
+    ```
+    python run.py train --enc-pretrained-filepath rnn_PretrainEncoder.pt --epochs 25
+    ```
 
-Before running the command, change the training parameters in the config.yaml, most important:
 
-- model_name ("skipgram", "cbow")
-- dataset ("WikiText2", "WikiText103")
-- model_dir (directory to store experiment artifacts, should start with "weights/")
+Training parameters are set in the `config/train.yaml` and could be replaced by command line arguments
+
 
 ## Ablation study
-- Training seq2seq model based on standard LSTM-encoder and LSTM-decoder for russian-english translation.
-- Pretraining LSTM-encoder on language model task on russian language.
-- Pretraining LSTM-decoder on language model task on english language.
-- Training pretrained LSTM-encoder and standard LSTM-decoder for translation task.
-- Training LSTM-encoder and pretrained LSTM-decoder for translation task.
-- Training pretrained LSTM-encoder and pretrained LSTM-decoder for translation task.
-- Training Transformer model for translation task.
-- Training Transformer model on BPE tokens.
+Experiment | BLUE score | GPU training time per epoch 
+--- |------------| --- 
+LSTM-encoder and LSTM-decoder | 18.5       | 1m 14s
+LSTM-encoder and LSTM-decoder; LSTM-encoder pretrained on LM task on russian language | 20.4       | 1m 19s 
+LSTM-encoder and LSTM-decoder; LSTM-decoder pretreined on LM task on english language | 17.8       |  1m 19s
+LSTM-encoder and LSTM-decoder; both LSTM-encoder and LSTM-decoder pretreined on LM task| 17.2       |  1m 19s
+Transformer model with NLTK tokenizer| 28.7       | 50s  
+Transformer model with BPE tokenizer| 26.6       | 1m 3s 
+
+
+Training logs contain examples of generated texts, loss and blue score.
+All visualizations are done in Tensorboard.
+Please, look at [nmt_experiments.ipynb](https://github.com/ermakovvova/nmt_experiments/blob/master/nmt_experiments.ipynb)
+
+
+
+Translation examples with Transformer model with 30 epochs and BPE:
+
+Original sentence | Generated sentence 
+--- |------------
+the osmose spa is the perfect place for a relaxing experience . it features a hammam . | guests can relax in the turkish bath or enjoy a drink at the spa centre .
+a grocery shop is 50 metres from moncherie studio rooms , while the nearest green market is 500 metres away . | the nearest grocery store is 50 metres away .
+easily accessible from all major routes , lodge impresses with personalized service . | all the rooms of the bay ofs bay is a bicycle serviced and the area with all the bay ofs .
+rowing boats , paddle boards and snorkeling equipments are available . | it offers home - cooked meals , as well as the upon request .
+ar tavern backpackers hostel is a 10 - minute walk from finsbury park station and ar f . c ’ s emirates stadium . | naly park is a 10 - minute walk from metro station , where guests can enjoy the stadium and the est health club .
+

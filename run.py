@@ -7,7 +7,7 @@ from data import download_data, preprocess_data, init_dataloaders, split_src_trg
     init_tokenizers
 from parser import get_parser, setup_train_parser, setup_pretrain_parser, setup_translate_parser
 
-PROGRAM_NAME = 'made_nlp_lab_2'
+PROGRAM_NAME = 'nmt'
 SEED = 3
 
 random.seed(SEED)
