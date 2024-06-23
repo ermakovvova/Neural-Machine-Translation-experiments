@@ -84,7 +84,6 @@ Transformer model with BPE tokenizer| 26.6       | 1m 3s
 
 Training logs contain examples of generated texts, loss and blue score.
 All visualizations are done in Tensorboard.
-Please, look at [nmt_experiments.ipynb](https://github.com/ermakovvova/nmt_experiments/blob/master/nmt_experiments.ipynb)
 
 
 
