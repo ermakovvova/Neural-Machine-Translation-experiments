@@ -47,7 +47,7 @@ English-Russian pairs of hotel descriptions.
 Command line tool allows to run
 - train LSTM based Seq2Seq model:
     ```
-    python run.py train --seq2seq-name Seq2Seq --epochs 25`
+    python run.py train --seq2seq-name Seq2Seq --epochs 25
     ```
     or Transformer model:
     ```
